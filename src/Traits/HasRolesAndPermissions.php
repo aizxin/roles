@@ -251,7 +251,7 @@ trait HasRolesAndPermissions
             $this->permissions = $resultSet;//$this->toHydratedArrary($resultSet, Permissions::class);
         }
 
-        return $this->permissions;
+        return $this->permissions->toArray();
     }
 
     /**
