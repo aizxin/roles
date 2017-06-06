@@ -1,0 +1,20 @@
+{
+    "name": "sow/roles",
+    "description": "Simple package for handling roles and permissions in Phalcon 3.",
+    "type": "library",
+    "keywords": ["roles", "permissions", "acl", "auth", "phalcon"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sow",
+            "email": "aizxin@gmail.com",
+            "homepage": "https://github.com/aizxin"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sow\\Roles\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
