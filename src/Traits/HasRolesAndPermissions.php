@@ -3,6 +3,7 @@
 namespace Sow\Roles\Traits;
 
 use Closure;
+use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\Resultset;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use Sow\Roles\Models\Permissions;
@@ -170,10 +171,10 @@ trait HasRolesAndPermissions
     /**
      * Attach roles to a user.
      *
-     * @param array $roles
+     * @param Roles[]|ResultInterface $roles
      * @return bool
      */
-    public function attachAllRoles(array $roles)
+    public function attachAllRoles($roles)
     {
         $rolesToAttach = [];
 
@@ -183,7 +184,7 @@ trait HasRolesAndPermissions
             }
         }
 
-        $this->setRoles($roles);
+        $this->setRoles($rolesToAttach);
 
         return $this->save();
     }
@@ -241,14 +242,14 @@ trait HasRolesAndPermissions
             $roleIDs = array_column($roles, 'id');
 
             $builder = $this->getModelsManager()->createBuilder();
-            $builder->columns('DISTINCT p.*');
+            $builder->columns('DISTINCT p.id, p.name, p.slug, p.description');
             $builder->from(['rp' => RolesPermissions::class]);
             $builder->join(Permissions::class, 'rp.permission_id = p.id', 'p');
             $builder->inWhere('rp.role_id', $roleIDs);
 
             $resultSet = $builder->getQuery()->execute();
 
-            $this->permissions = $resultSet;//$this->toHydratedArrary($resultSet, Permissions::class);
+            $this->permissions = $this->toHydratedArrary($resultSet, Permissions::class);
         }
 
         return $this->permissions;
@@ -263,6 +264,18 @@ trait HasRolesAndPermissions
     public function can($permission)
     {
         return $this->hasPermission(new Permissions(["slug" => $permission]));
+    }
+
+
+    /**
+     * Check if user is allowed to perform an action that requires permission,
+     *
+     * @param $permission
+     * @return bool
+     */
+    public function isAllowed($permission)
+    {
+        return $this->can($permission);
     }
 
     /**

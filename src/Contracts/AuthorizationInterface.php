@@ -2,6 +2,7 @@
 
 namespace Sow\Roles\Contracts;
 
+use Phalcon\Mvc\Model\ResultInterface;
 use Sow\Roles\Models\Permissions;
 use Sow\Roles\Models\Roles;
 
@@ -42,10 +43,10 @@ interface AuthorizationInterface
     /**
      * Attach roles to a user.
      *
-     * @param array $roles
+     * @param Roles[]|ResultInterface $roles
      * @return bool
      */
-    public function attachAllRoles(array $roles);
+    public function attachAllRoles($roles);
 
     /**
      * Detach role from a user.
@@ -76,6 +77,14 @@ interface AuthorizationInterface
      * @return bool
      */
     public function can($permission);
+
+    /**
+     * Check if user is allowed to perform an action that requires permission,
+     *
+     * @param $permission
+     * @return bool
+     */
+    public function isAllowed($permission);
 
     /**
      * Check if the user has a permission.
